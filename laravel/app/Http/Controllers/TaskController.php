@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\TaskRequest;
 use App\Models\Task;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
@@ -44,10 +45,9 @@ class TaskController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  Request  $request
      * @return string
      */
-    public function store(Request $request): string
+    public function store(TaskRequest $request): string
     {
         Task::create([
             'task' => $request->task,
@@ -82,7 +82,7 @@ class TaskController extends Controller
      * @param  Request  $request
      * @param  int  $id
      */
-    public function update(Request $request, $id): int|string
+    public function update(TaskRequest $request, $id): int|string
     {
         $task = Task::find($id);
 
