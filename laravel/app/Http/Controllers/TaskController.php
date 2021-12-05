@@ -3,17 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class TaskController extends Controller
 {
-    private $taskList = [
-        'first' => 'Eat',
-        'second' => 'Sleep',
-        'third' => 'Work'
-    ];
+
 
     /**
      * Display a listing of the resource.
@@ -24,23 +19,12 @@ class TaskController extends Controller
     {
 
         if ($request->search) {
-            $tasks = DB::table('tasks')->where('task', 'LIKE', "%$request->search%")->get();
-            return $tasks;
+            return DB::table('tasks')->where('task', 'LIKE', "%$request->search%")->get();
         }
 
-        $tasks = DB::table('tasks')->get();
-        return $tasks;
+        return DB::table('tasks')->get();
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -64,21 +48,10 @@ class TaskController extends Controller
      * @param  int  $id
      * @return int
      */
-    public function show($id)
+    public function show($id): int
     {
         $task = DB::table('tasks')->where('id', $id)->first();
-        ddd($task);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return Response
-     */
-    public function edit($id)
-    {
-        //
+        return 'success';
     }
 
     /**
@@ -100,10 +73,11 @@ class TaskController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return Response
+     * @return string
      */
-    public function destroy($id)
+    public function destroy($id): string
     {
-        //
+        DB::table('tasks')->where('id', $id)->delete();
+        return 'success';
     }
 }
