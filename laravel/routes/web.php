@@ -20,7 +20,7 @@ Route::get('/', function () {
 
 //Route::resource('tasks', TaskController::class);
 
-Route::get('/tasks', [TaskController::class, 'index'])->middleware('is_admin');
+Route::get('/tasks', [TaskController::class, 'index']);
 Route::get('/tasks/create', [TaskController::class, 'create']);
 Route::post('/tasks', [TaskController::class, 'store']);
 Route::get('/tasks/{id}', [TaskController::class, 'show']);
