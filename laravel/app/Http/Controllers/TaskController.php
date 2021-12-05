@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class TaskController extends Controller
@@ -17,15 +18,18 @@ class TaskController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return string[]
+     * @return Collection
      */
     public function index(Request $request)
     {
+
         if ($request->search) {
-            return $this->taskList[$request->search];
+            $tasks = DB::table('tasks')->where('task', 'LIKE', "%$request->search%")->get();
+            return $tasks;
         }
 
-        return $this->taskList;
+        $tasks = DB::table('tasks')->get();
+        return $tasks;
     }
 
     /**
@@ -62,7 +66,8 @@ class TaskController extends Controller
      */
     public function show($id)
     {
-        return $id;
+        $task = DB::table('tasks')->where('id', $id)->first();
+        ddd($task);
     }
 
     /**
@@ -81,11 +86,14 @@ class TaskController extends Controller
      *
      * @param  Request  $request
      * @param  int  $id
-     * @return Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $id): int|string
     {
-        //
+        DB::table('tasks')->where('id', $id)->update([
+            'task' => $request->task,
+            'user' => $request->user,
+        ]);
+        return 'success';
     }
 
     /**
