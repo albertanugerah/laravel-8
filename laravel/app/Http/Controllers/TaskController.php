@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Task;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
+use Illuminate\View\View;
 
 class TaskController extends Controller
 {
@@ -13,16 +15,29 @@ class TaskController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return Collection
+     * @return Application|Factory|\Illuminate\Contracts\View\View
      */
     public function index(Request $request)
     {
 
         if ($request->search) {
-            return DB::table('tasks')->where('task', 'LIKE', "%$request->search%")->get();
+            $task = Task::where('task', 'LIKE', "%$request->search%")->paginate(4);
+
+            return view('task.index', [
+                'data' => $task,
+            ]);
         }
 
-        return DB::table('tasks')->get();
+        $task = Task::paginate(4);
+
+        return view('task.index', [
+            'data' => $task,
+        ]);
+    }
+
+    public function create(): View
+    {
+        return view('task.create');
     }
 
 
@@ -34,24 +49,31 @@ class TaskController extends Controller
      */
     public function store(Request $request): string
     {
-        DB::table('tasks')->insert([
+        Task::create([
             'task' => $request->task,
             'user' => $request->user
         ]);
 
-        return 'success';
+        return redirect('/tasks');
     }
 
     /**
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return int
+     *
      */
-    public function show($id): int
+    public function show(int $id)
     {
-        $task = DB::table('tasks')->where('id', $id)->first();
-        return 'success';
+        return Task::find($id);
+
+    }
+
+    public function edit($id): View
+    {
+        $task = Task::find($id);
+
+        return view('task.edit', compact('task'));
     }
 
     /**
@@ -62,11 +84,13 @@ class TaskController extends Controller
      */
     public function update(Request $request, $id): int|string
     {
-        DB::table('tasks')->where('id', $id)->update([
+        $task = Task::find($id);
+
+        $task->update([
             'task' => $request->task,
             'user' => $request->user,
         ]);
-        return 'success';
+        return redirect('/tasks');
     }
 
     /**
@@ -77,7 +101,8 @@ class TaskController extends Controller
      */
     public function destroy($id): string
     {
-        DB::table('tasks')->where('id', $id)->delete();
-        return 'success';
+        Task::find($id)->delete();
+        return redirect('/tasks');
+
     }
 }
