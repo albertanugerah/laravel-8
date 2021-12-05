@@ -4,12 +4,15 @@
     <div class="mt-5 mx-auto" style="width: 380px">
         <div class="card">
             <div class="card-body">
-                <form action="{{ route('login') }}" method="post">
+                <form action="{{ route('password.update') }}" method="post">
                     @csrf
+                    <input type="hidden" name="token" value="{{ $request->route('token') }}">
+
                     {{--email--}}
                     <div class="mb-3">
                         <label for="email" class="form-label">E-Mail</label>
-                        <input id="email" name="email" type="email" class="form-control" value="{{ old('email') }}">
+                        <input id="email" name="email" type="email" class="form-control"
+                               value="{{ old('email',$request->email) }}">
                         @error('email')
                         <span class="text-danger">
                             {{ $message }}
@@ -28,10 +31,14 @@
                         </span>
                         @enderror
                     </div>
-                    <button type="submit" class="btn btn-primary">Login</button>
-                    <a href="{{ route('password.request') }}" class="btn btn-link">
-                        Forgot your password?
-                    </a>
+
+                    {{--confirm_password--}}
+                    <div class="mb-3">
+                        <label for="confirm_password" class="form-label">Confirm Password</label>
+                        <input id="confirm_password" name="password_confirmation" type="password" class="form-control">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Reset Password</button>
                 </form>
             </div>
         </div>
