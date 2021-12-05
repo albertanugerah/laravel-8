@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Co;
 use App\Http\Requests\TaskRequest;
 use App\Models\Task;
 use Illuminate\Contracts\Foundation\Application;
@@ -15,6 +16,7 @@ class TaskController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware('verified');
         $this->middleware('is_admin');
     }
 
